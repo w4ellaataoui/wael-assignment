@@ -1,0 +1,114 @@
+<div class="table-container">
+  <input
+    *ngIf="!!data.length"
+    class="search-input"
+    type="text"
+    placeholder="Search..."
+    [(ngModel)]="query"
+    (input)="onSearch()"
+  />
+  <div class="table-wrapper">
+    <table class="table">
+      <thead>
+        <tr>
+          <th
+            *ngFor="let column of columns; trackBy: (_, col) => col.dataIndex"
+            title="{{ column.title }}"
+            (click)="onSort({ field: column.dataIndex, direction: 'asc' })"
+          >
+            {{ column.name }}
+            {{ orderBy === column.dataIndex ? (orderDirection === 'asc' ? '▲' : '▼') : '⇅' }}
+          </th>
+        </tr>
+      </thead>
+      <tbody *ngIf="!!displayedRows.length && !isLoading">
+        <tr *ngFor="let row of displayedRows; trackBy: (index) => index" class="table-row">
+          <td *ngFor="let column of columns; trackBy: (_, col) => col.dataIndex" class="table-cell">
+            <ng-container
+              *ngIf="column.render?.(row[column.dataIndex], row) as rendered; else defaultCell"
+            >
+              <ng-container *ngIf="isRenderComponent(rendered); else textCell">
+                <ng-container
+                  *ngComponentOutlet="
+                    asRenderComponent(rendered).component;
+                    inputs: asRenderComponent(rendered).inputs
+                  "
+                >
+                </ng-container>
+              </ng-container>
+
+              <ng-template #textCell>
+                {{ rendered }}
+              </ng-template>
+            </ng-container>
+
+            <ng-template #defaultCell>
+              {{ row[column.dataIndex] }}
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <ng-container *ngIf="isLoading">
+    <ng-container *ngTemplateOutlet="loadingIcon"></ng-container>
+  </ng-container>
+  <div *ngIf="!!displayedRows.length && !isLoading" class="table-footer">
+    <div class="total-count">
+      Page: {{ currentPage }} of {{ totalPages }} | Total rows: {{ data.length }}
+      <p *ngIf="query">Search results: {{ searchResultsCount }}</p>
+    </div>
+    <div class="pagination">
+      <select class="page-size-selector" [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+        <option *ngFor="let size of pageSizeOptions; trackBy: (_, s) => s" [value]="size">
+          {{ size }} / page
+        </option>
+      </select>
+      <button
+        class="pagination-item prev-button"
+        [disabled]="currentPage === 1"
+        (click)="onPageChange(currentPage - 1)"
+      >
+        ‹
+      </button>
+      <span
+        class="pagination-item"
+        [class.active]="page === currentPage"
+        *ngFor="let page of pages; trackBy: (_, p) => p"
+        (click)="onPageChange(page)"
+      >
+        {{ page }}
+      </span>
+      <button
+        class="pagination-item next-button"
+        [disabled]="currentPage === totalPages"
+        (click)="onPageChange(currentPage + 1)"
+      >
+        ›
+      </button>
+    </div>
+  </div>
+  <div *ngIf="!displayedRows.length && !isLoading" class="empty-msg">No data found :(</div>
+
+  <ng-template #loadingIcon>
+    <div class="loading-icon">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,19a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z"
+          opacity=".25"
+        />
+        <path
+          d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
+        >
+          <animateTransform
+            attributeName="transform"
+            type="rotate"
+            dur="0.75s"
+            values="0 12 12;360 12 12"
+            repeatCount="indefinite"
+          />
+        </path>
+      </svg>
+    </div>
+  </ng-template>
+</div>
