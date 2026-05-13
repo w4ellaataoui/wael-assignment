@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TableComponent, Tag } from './shared/components';
-import { Column, Member } from './shared/types';
+import { Column, DesignToken, Member } from './shared/types';
 import { members as membersData } from './shared/constants';
 @Component({
   selector: 'app-root',
@@ -44,5 +44,9 @@ export class App {
         },
       }),
     },
-  ] as const;
+  ];
+  designToken: DesignToken = {
+    color: 'primary',
+    size: 'md',
+  };
 }

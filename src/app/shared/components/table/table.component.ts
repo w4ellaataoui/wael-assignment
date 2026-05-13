@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, ContentChild, Input, OnInit, TemplateRef } from '@angular/core';
-import { Column, RenderComponent } from '../../types';
+import { Column, DesignToken, RenderComponent } from '../../types';
 import { FormsModule } from '@angular/forms';
+import { DefaultDesignToken } from '../../constants';
 
 @Component({
   selector: 'table-component',
@@ -10,7 +11,11 @@ import { FormsModule } from '@angular/forms';
   imports: [CommonModule, FormsModule],
 })
 export class TableComponent<T extends object> implements OnInit {
-  constructor() {}
+  @Input() columns: Column<T>[] = [];
+  @Input() data: T[] = [];
+  @Input() isLoading: boolean = false;
+  @Input() designToken: DesignToken = DefaultDesignToken;
+
   displayedRows: T[] = [];
   pageSize: number = 10;
   currentPage: number = 1;
@@ -21,10 +26,6 @@ export class TableComponent<T extends object> implements OnInit {
   query: string = '';
   pageSizeOptions: number[] = [10, 25, 50];
   searchResultsCount: number = 0;
-
-  @Input() columns: Column<T>[] = [];
-  @Input() data: T[] = [];
-  @Input() isLoading: boolean = false;
 
   ngOnInit() {
     this.displayData();

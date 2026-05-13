@@ -11,7 +11,8 @@
   --red: #f44336;
   --green: #4caf50;
   --radius: 4px;
-  font-family: 'Roboto', sans-serif;
+  --font-primary: 'Roboto', sans-serif;
+  font-family: var(--font-primary);
   box-sizing: border-box;
   * {
     box-sizing: border-box;

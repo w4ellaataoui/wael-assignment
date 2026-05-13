@@ -42,12 +42,7 @@ const meta: Meta<TableComponent<Member>> = {
   title: 'Table',
   component: TableComponent,
   tags: ['autodocs'],
-  // argTypes: {
-  //  columns: {
-
-  // },
-  // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#story-args
-  args: { data: [], columns },
+  args: { data: members, columns },
 };
 
 export default meta;
@@ -65,4 +60,12 @@ export const Empty: Story = {
 };
 export const Loading: Story = {
   args: { data: [], isLoading: true },
+};
+export const DesignToken: Story = {
+  args: {
+    designToken: {
+      color: 'secondary',
+      size: 'sm',
+    },
+  },
 };

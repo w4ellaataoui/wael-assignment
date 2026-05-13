@@ -1,5 +1,10 @@
 <style></style>
 <main class="main">
-  <table-component [columns]="columns" [data]="members" [isLoading]="false"></table-component>
+  <table-component
+    [columns]="columns"
+    [data]="members"
+    [isLoading]="false"
+    [designToken]="designToken"
+  ></table-component>
   <router-outlet />
 </main>
